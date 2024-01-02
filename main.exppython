@@ -61,7 +61,7 @@ for instruction in instructions:
 seconds -= turns * turn_speed
 brain.screen.print(moves)
 total_distance = moves * 500
-speed = circ / total_distance
+speed = total_distance / circ / (seconds / 60)
 drivetrain.set_drive_velocity(speed, RPM)
 
 for instruction in instructions:
