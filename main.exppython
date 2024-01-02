@@ -1,0 +1,76 @@
+#region VEXcode Generated Robot Configuration
+from vex import *
+import urandom
+
+# Brain should be defined by default
+brain = Brain()
+
+# Robot configuration code
+brain_inertial = Inertial()
+left_drive_smart = Motor(Ports.PORT6, False)
+right_drive_smart = Motor(Ports.PORT10, True)
+drivetrain = SmartDrive(left_drive_smart, right_drive_smart, brain_inertial, 259.34, 320, 40, MM, 1)
+
+
+# Wait for sensor(s) to fully initialize
+wait(100, MSEC)
+
+def calibrate_drivetrain():
+    # Calibrate the Drivetrain Inertial
+    sleep(200, MSEC)
+    brain.screen.print("Calibrating")
+    brain.screen.next_row()
+    brain.screen.print("Inertial")
+    brain_inertial.calibrate()
+    while brain_inertial.is_calibrating():
+        sleep(25, MSEC)
+    brain.screen.clear_screen()
+    brain.screen.set_cursor(1, 1)
+
+#endregion VEXcode Generated Robot Configuration
+# ------------------------------------------
+# 
+#   Project:      VEXcode Project
+#   Author:       VEX
+#   Created:
+#   Description:  VEXcode EXP Python Project
+# 
+# ------------------------------------------
+
+# Library imports
+from vex import *
+
+# Begin project code
+WHEEL_DIAMETER = 82.55 #Millimeters
+
+circ = WHEEL_DIAMETER * 3.14
+seconds = 20 #ENTER TIME HERE
+turn_speed = 2
+turns = 0
+moves = 0
+instructions = [0.7, "r", 1, -0.2]
+
+for instruction in instructions:
+    if(isinstance(instruction, str)):
+        turns += 1;
+        if(instruction == "u"):
+            turns += 1
+    else:
+        moves += instruction
+
+seconds -= turns * turn_speed
+brain.screen.print(moves)
+total_distance = moves * 500
+speed = circ / total_distance
+drivetrain.set_drive_velocity(speed, RPM)
+
+for instruction in instructions:
+    if(isinstance(instruction, str)):
+        if(instruction == "u"):
+           drivetrain.turn_for(RIGHT, 180, DEGREES)
+        if(instruction == "r"):
+           drivetrain.turn_for(RIGHT, 90, DEGREES)
+        if(instruction == "l"):
+           drivetrain.turn_for(LEFT, 90, DEGREES)
+    else:
+       drivetrain.drive_for(FORWARD, instruction * 500, MM)
